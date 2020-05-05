@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { interval, timer, fromEvent } from 'rxjs';
+import { interval, timer, fromEvent, Observable, noop } from 'rxjs';
+import { response } from 'express';
 
 @Component({
   selector: 'about',
@@ -12,7 +13,28 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
 
-    // Defination of strams
+    const http$ = Observable.create((observer) => {
+      fetch('/api/courses')
+        .then(response => {
+          return response.json();
+        })
+        .then(body => {
+          observer.next(body);
+          observer.complete();
+        })
+        .catch(err => {
+          observer.error(err);
+        })
+    });
+
+    http$.subscribe(
+      courses => console.log(courses),
+      noop,
+      () => { console.log(`Completed`) }
+    )
+
+    /*
+    // Defination of streams
     const interval$ = timer(3000, 1000);
 
     // Not ON unless subscribed
@@ -30,7 +52,7 @@ export class AboutComponent implements OnInit {
       (evt) => { console.log(`${evt}`) },
       (err) => { console.log(`${err}`) },
       () => { console.log(`Completed`) }
-    );
+    );*/
 
     /* The regular way
     // Multivalue Stream - value emmited with interaction (never complete)
