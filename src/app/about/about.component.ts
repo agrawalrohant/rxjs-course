@@ -1,8 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { interval, timer, fromEvent, Observable, noop } from 'rxjs';
-import { response } from 'express';
-import { createHttpObservable } from '../common/util';
-import { map } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'about',
@@ -17,17 +13,7 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
 
-    const http$ = createHttpObservable('/api/courses');
 
-    const courses$ = http$.pipe(
-      map(res => Object.values(res["payload"]))
-    );
-
-    courses$.subscribe(
-      courses => console.log(courses),
-      noop,
-      () => { console.log(`Completed`) }
-    )
 
     /*
     // Defination of streams
