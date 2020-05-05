@@ -15,15 +15,22 @@ export class AboutComponent implements OnInit {
     // Defination of strams
     const interval$ = timer(3000, 1000);
 
-    // Not on unless subscribed
-    interval$.subscribe((val) => {
+    // Not ON unless subscribed
+    const sub = interval$.subscribe((val) => {
       console.log(`Stream 1 ${val}`);
     });
 
+    // Unsubscribe
+    setTimeout(() => { sub.unsubscribe() }
+      , 5000);
+
+    // Success, Error, Complete
     const click$ = fromEvent(document, 'click');
-    click$.subscribe((evt) => {
-      console.log(evt);
-    });
+    click$.subscribe(
+      (evt) => { console.log(`${evt}`) },
+      (err) => { console.log(`${err}`) },
+      () => { console.log(`Completed`) }
+    );
 
     /* The regular way
     // Multivalue Stream - value emmited with interaction (never complete)
