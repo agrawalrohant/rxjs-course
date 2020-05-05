@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'about',
@@ -11,6 +12,19 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
 
+    const interval$ = interval(1000);
+    interval$.subscribe((val) => {
+      console.log(`Stream 1 ${val}`);
+    });
+    interval$.subscribe((val) => {
+      console.log(`Stream 2 ${val}`);
+    });
+
+
+
+
+
+    /* The regular way
     // Multivalue Stream - value emmited with interaction (never complete)
     document.addEventListener('click', evt => {
       console.log(evt);
@@ -29,7 +43,7 @@ export class AboutComponent implements OnInit {
     setTimeout(() => {
       console.log(`finished...`);
     }, 3000
-    );
+    );*/
 
   }
 
