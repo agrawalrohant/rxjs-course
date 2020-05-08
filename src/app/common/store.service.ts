@@ -3,6 +3,7 @@ import { Observable, Subject, BehaviorSubject, timer } from "rxjs";
 import { Course } from "../model/course";
 import { createHttpObservable } from "./util";
 import { tap, map, shareReplay, retryWhen, delayWhen } from "rxjs/operators";
+import { fromPromise } from "rxjs/internal-compatibility";
 
 @Injectable({
     providedIn: "root"
@@ -42,6 +43,28 @@ export class Store {
                         )
                 )
             )
+    }
+
+    saveCourse(id: number, value: any): Observable<any> {
+        const courses = this.subject.getValue();
+
+        const courseIndex = courses.findIndex(course => course.id == id);
+
+        const newCourses = courses.slice(0);
+        newCourses[courseIndex] = {
+            ...courses[courseIndex],
+            ...value
+        };
+
+        this.subject.next(newCourses);
+
+        return fromPromise(fetch(`/api/courses/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(value),
+            headers: {
+                'content-type': 'application/json'
+            }
+        }));
     }
 
 }
